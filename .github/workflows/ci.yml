@@ -14,14 +14,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64, arm64]
+        platform: [amd64]
         image:
           # cool images list :)
-          - ghcr.io/micro856/netc-image
-        include:
-          # big dumdums that dont have aarch64 :P
-          - platform: amd64
-            image: ghcr.io/micro856/netc-image
+          - ghcr.io/bootcrew/arch-bootc:latest
     steps:
       - name: Maximize Build Space
         if: matrix.platform == 'amd64'
