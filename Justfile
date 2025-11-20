@@ -242,6 +242,7 @@ rootfs-install-livesys-scripts livesys="1":
 
     # Enable services
     systemctl enable livesys.service livesys-late.service
+    systemctl disable plasma-setup.service
 
     # Set default time zone to prevent oddities with KDE clock
     echo "C /var/lib/livesys/livesys-session-extra 0755 root root - /usr/share/factory/var/lib/livesys/livesys-session-extra" > \
