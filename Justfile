@@ -156,8 +156,11 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    useradd -m --shell=/bin/bash liveuser
+    useradd -m --shell=/bin/bash -c "Live System User" liveuser
     usermod -aG wheel liveuser
+    echo "[Autologin] " >> /etc/sddm.conf
+    echo "User=liveuser" >> /etc/sddm.conf
+    echo "Session=plasmawayland" >> /etc/sddm.conf
     pacman -Sy --noconfirm dracut
     KERNEL_VERSION=$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")
     mkdir -p $(realpath /root)
