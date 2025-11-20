@@ -157,7 +157,6 @@ initramfs:
     set -euo pipefail
     CMD='set -xeuo pipefail
     useradd -m --shell=/bin/bash liveuser
-    usermod -L liveuser
     usermod -aG wheel liveuser
     pacman -Sy --noconfirm dracut
     KERNEL_VERSION=$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")
