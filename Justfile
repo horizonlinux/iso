@@ -156,8 +156,10 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    useradd -m --shell=/bin/bash -c "Live System User" liveuser
+    useradd -m --shell=/bin/bash -c "Live System User" --disabled-password liveuser
+    passwd -d liveuser
     usermod -aG wheel liveuser
+    echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     echo "[Autologin] " >> /etc/sddm.conf
     echo "User=liveuser" >> /etc/sddm.conf
     echo "Session=plasmawayland" >> /etc/sddm.conf
