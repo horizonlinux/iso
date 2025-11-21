@@ -156,8 +156,9 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    useradd -m --shell=/bin/bash -c "Live System User" liveuser
+    useradd -m -c "Live System User" liveuser
     usermod -p "$(echo "liveuser" | mkpasswd -s)" liveuser
+    usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     echo "[Autologin] " >> /etc/sddm.conf
