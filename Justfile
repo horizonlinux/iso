@@ -161,7 +161,7 @@ initramfs:
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-    pacman -Sy --noconfirm git blueprint-compiler gnome-desktop gnome-desktop-4 gtk4 libadwaita libgweather-4 python-yaml udisks2 vte4 vte4-utils base-devel meson cmake appstream-glib
+    n -Sy --noconfirm git blueprint-compiler gnome-desktop gnome-desktop-4 gtk4 libadwaita libgweather-4 python-yaml udisks2 vte4 vte4-utils base-devel meson cmake appstream-glib
     git clone --recursive https://gitlab.gnome.org/p3732/os-installer.git /tmp/os-installer
     cd /tmp/os-installer
     meson setup build
@@ -169,7 +169,6 @@ initramfs:
     git clone https://github.com/horizonlinux/os-installer-config.git /tmp/os-installer-config
     cp -r /tmp/os-installer-config /etc/os-installer
     pacman -Rns --noconfirm base-devel git blueprint-compiler base-devel meson cmake
-    pacman -S --clean
     pacman -Sy --noconfirm dracut
     KERNEL_VERSION=$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")
     mkdir -p $(realpath /root)
