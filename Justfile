@@ -167,7 +167,7 @@ initramfs:
     meson setup build
     meson install -C build
     git clone https://github.com/horizonlinux/os-installer-config.git /tmp/os-installer-config
-    cp /tmp/os-installer-config /etc/os-installer
+    cp -r /tmp/os-installer-config /etc/os-installer
     pacman -Rns --noconfirm base-devel git blueprint-compiler base-devel meson cmake
     pacman -S --clean
     pacman -Sy --noconfirm dracut
