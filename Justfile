@@ -156,14 +156,20 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    useradd -m -c "Live System User" liveuser
+    useradd -m liveuser
     usermod -p "$(echo "liveuser" | mkpasswd -s)" liveuser
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-    echo "[Autologin] " >> /etc/sddm.conf
-    echo "User=liveuser" >> /etc/sddm.conf
-    echo "Session=plasmawayland" >> /etc/sddm.conf
+    pacman -Sy --noconfirm git blueprint-compiler gnome-desktop gnome-desktop-4 gtk4 libadwaita libgweather-4 python-yaml udisks2 vte4 vte4-utils base-devel meson cmake
+    git clone --recursive https://gitlab.gnome.org/p3732/os-installer.git /tmp/os-installer
+    cd /tmp//os-installer
+    meson setup build
+    sudo meson install -C build
+    git clone https://github.com/horizonlinux/os-installer-config.git /tmp/os-installer-config
+    cp /tmp/os-installer-config /etc/os-installer
+    pacman -Rns --noconfirm base-devel git blueprint-compiler base-devel meson cmake
+	pacman -S --clean
     pacman -Sy --noconfirm dracut
     KERNEL_VERSION=$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")
     mkdir -p $(realpath /root)
