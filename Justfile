@@ -162,6 +162,7 @@ initramfs:
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    touch /home/liveuser/.config/plasma-welcomerc
     echo "ShouldShow=false" >> /home/liveuser/.config/plasma-welcomerc
     chown -R liveuser:liveuser /home/liveuser
     sed -i '/Relogin=/c\Relogin=true' /usr/lib/sddm/sddm.conf.d/default.conf && \
