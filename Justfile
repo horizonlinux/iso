@@ -158,7 +158,7 @@ initramfs:
     CMD='set -xeuo pipefail
     mkdir -p /home/liveuser
     cp -a /etc/skel /home/liveuser
-    useradd -c "Live System User" -m liveuser -d /liveuser
+    useradd -c "Live System User" -m liveuser -d /home/liveuser
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -166,7 +166,7 @@ initramfs:
     touch /home/liveuser/.config/plasma-welcomerc
     echo "ShouldShow=false" >> /home/liveuser/.config/plasma-welcomerc
     chown -R liveuser:liveuser /home/liveuser
-    sed -i '/Relogin=/c\Relogin=true' /usr/lib/sddm/sddm.conf.d/default.conf && \
+    sed -i '/Relogin=/c\Relogin=false' /usr/lib/sddm/sddm.conf.d/default.conf && \
     sed -i '/Session=/c\Session=plasma' /usr/lib/sddm/sddm.conf.d/default.conf && \
     sed -i '/User=/c\User=liveuser' /usr/lib/sddm/sddm.conf.d/default.conf && \
     pacman -Sy --noconfirm firefox
