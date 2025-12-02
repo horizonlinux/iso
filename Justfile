@@ -156,11 +156,14 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    useradd -m liveuser
+    mkdir -p /liveuser
+    cp -a /etc/skel/. /liveuser
+    useradd -m liveuser -d /liveuser
     usermod -p "$(echo "liveuser" | mkpasswd -s)" liveuser
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    pacman -Sy --noconfirm firefox
     pacman -Sy --noconfirm git blueprint-compiler gnome-desktop gnome-desktop-4 gtk4 libadwaita libgweather-4 python-yaml udisks2 vte4 vte4-utils base-devel meson cmake appstream-glib
     git clone --recursive https://gitlab.gnome.org/p3732/os-installer.git /tmp/os-installer
     cd /tmp/os-installer
