@@ -160,6 +160,9 @@ initramfs:
     usermod -c "Live System User" liveuser
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    cp -a /etc/skel /home/liveuser
+    echo "ShouldShow=false" >> /home/liveuser/.config/plasma-welcomerc
+    chown -R liveuser:liveuser /home/liveuser
     sed -i '/Relogin=/c\Relogin=true' /usr/lib/sddm/sddm.conf.d/default.conf && \
     sed -i '/Session=/c\Session=plasma' /usr/lib/sddm/sddm.conf.d/default.conf && \
     sed -i '/User=/c\User=liveuser' /usr/lib/sddm/sddm.conf.d/default.conf && \
