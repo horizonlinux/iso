@@ -162,6 +162,7 @@ initramfs:
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    mkdir -p /home/liveuser/.config
     touch /home/liveuser/.config/plasma-welcomerc
     echo "ShouldShow=false" >> /home/liveuser/.config/plasma-welcomerc
     chown -R liveuser:liveuser /home/liveuser
