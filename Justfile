@@ -156,13 +156,13 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    mkdir -p /liveuser
-    cp -a /etc/skel/. /liveuser
-    useradd -m liveuser -d /liveuser
-    usermod -p "$(echo "liveuser" | mkpasswd -s)" liveuser
-    usermod -p "$(echo "root" | mkpasswd -s)" root
+    install -g liveuser -o liveuser -d /home/liveuser
+    usermod -c "Live System User" liveuser
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    sed -i '/Relogin=/c\Relogin=true' /usr/lib/sddm/sddm.conf.d/default.conf && \
+    sed -i '/Session=/c\Session=plasma' /usr/lib/sddm/sddm.conf.d/default.conf && \
+    sed -i '/User=/c\User=liveuser' /usr/lib/sddm/sddm.conf.d/default.conf && \
     pacman -Sy --noconfirm firefox
     pacman -Sy --noconfirm git blueprint-compiler gnome-desktop gnome-desktop-4 gtk4 libadwaita libgweather-4 python-yaml udisks2 vte4 vte4-utils base-devel meson cmake appstream-glib
     git clone --recursive https://gitlab.gnome.org/p3732/os-installer.git /tmp/os-installer
@@ -192,7 +192,7 @@ rootfs-include-container container_image=default_image image=default_image:
     pacman -Sy --noconfirm fuse-overlayfs"
     chroot "$CMD"
 
-# Install Flatpaks into the live system
+# Install s into the live system
 rootfs-include-flatpaks FLATPAKS_FILE="src/flatpaks.txt":
     #!/usr/bin/env bash
     {{ _ci_grouping }}
@@ -204,7 +204,7 @@ rootfs-include-flatpaks FLATPAKS_FILE="src/flatpaks.txt":
 
     # Get Flatpaks
     flatpak remote-add --if-not-exists flathub "https://dl.flathub.org/repo/flathub.flatpakrepo"
-    # grep -v "#.*" /flatpak-list/$(basename {{ FLATPAKS_FILE }}) | sort --reverse | xargs "-i{}" -d "\n" sh -c "flatpak remote-info --arch={{ arch }} --system flathub {} &>/dev/null && flatpak install --noninteractive -y {}" || true'
+    grep -v "#.*" /flatpak-list/$(basename {{ FLATPAKS_FILE }}) | sort --reverse | xargs "-i{}" -d "\n" sh -c "flatpak remote-info --arch={{ arch }} --system flathub {} &>/dev/null && flatpak install --noninteractive -y {}" || true'
     set -euo pipefail
     chroot "$CMD" --volume "$(realpath "$(dirname {{ FLATPAKS_FILE }})")":/flatpak-list
 
@@ -257,6 +257,7 @@ rootfs-install-livesys-scripts livesys="1":
     # Enable services
     systemctl enable livesys.service livesys-late.service
     systemctl disable plasma-setup.service
+    systemctl enable vmtoolsd.service vmware-vmblock-fuse.service
 
     # Set default time zone to prevent oddities with KDE clock
     echo "C /var/lib/livesys/livesys-session-extra 0755 root root - /usr/share/factory/var/lib/livesys/livesys-session-extra" > \
