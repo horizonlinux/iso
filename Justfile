@@ -156,16 +156,17 @@ initramfs:
     {{ chroot_function }}
     set -euo pipefail
     CMD='set -xeuo pipefail
-    mkdir -p /home/liveuser
+    useradd -c "Live System User" -m liveuser
+    usermod -p "$(echo "liveuser" | mkpasswd -s)" liveuser
     cp -a /etc/skel /home/liveuser
-    useradd -c "Live System User" -m liveuser -d /home/liveuser
+    chown -R liveuser:liveuser /home/liveuser
     usermod -p "$(echo "root" | mkpasswd -s)" root
     usermod -aG wheel liveuser
     echo "liveuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     mkdir -p /home/liveuser/.config
     touch /home/liveuser/.config/plasma-welcomerc
     echo "ShouldShow=false" >> /home/liveuser/.config/plasma-welcomerc
-    chown -R liveuser:liveuser /home/liveuser
+    chown -R liveuser:liveuser /home/liveuser/.config
     sed -i '/Relogin=/c\Relogin=false' /usr/lib/sddm/sddm.conf.d/default.conf && \
     sed -i '/Session=/c\Session=plasma' /usr/lib/sddm/sddm.conf.d/default.conf && \
     sed -i '/User=/c\User=liveuser' /usr/lib/sddm/sddm.conf.d/default.conf && \
