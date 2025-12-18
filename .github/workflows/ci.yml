@@ -14,10 +14,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64, arm64]
+        platform: [amd64]
         image:
           # cool images list :)
           - ghcr.io/horizonlinux/horizon:latest
+        include:
+          - platform: arm64
+            image: ghcr.io/horizonlinux/horizon-arm64:latest
     steps:
       - name: Maximize Build Space
         if: matrix.platform == 'amd64'
