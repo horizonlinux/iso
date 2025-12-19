@@ -261,10 +261,9 @@ rootfs-install-livesys-scripts livesys="1":
     esac && unset -v _session_file
     sed -i "s/^livesys_session=.*/livesys_session=${desktop_env}/" /etc/sysconfig/livesys
 
-    # Enable services
+    #  services
     systemctl enable livesys.service livesys-late.service
     systemctl disable plasma-setup.service
-    systemctl enable vmtoolsd.service vmware-vmblock-fuse.service
 
     # Set default time zone to prevent oddities with KDE clock
     echo "C /var/lib/livesys/livesys-session-extra 0755 root root - /usr/share/factory/var/lib/livesys/livesys-session-extra" > \
