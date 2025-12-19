@@ -349,7 +349,7 @@ iso-organize extra_kargs: && (process-grub-template extra_kargs)
     {{ _ci_grouping }}
     set -xeuo pipefail
     mkdir -p {{ isoroot }}/boot/grub {{ isoroot }}/LiveOS
-    cp {{ rootfs }}/lib/modules/*/vmlinuz {{ isoroot }}/boot
+    cp {{ rootfs }}/lib/modules/$(uname -r)/vmlinuz {{ isoroot }}/boot
     cp {{ workdir }}/initramfs.img {{ isoroot }}/boot
     # Hardcoded on the dmsquash-live source code unless specified otherwise via kargs
     # https://github.com/dracut-ng/dracut-ng/blob/0ffc61e536d1193cb837917d6a283dd6094cb06d/modules.d/90dmsquash-live/dmsquash-live-root.sh#L23
